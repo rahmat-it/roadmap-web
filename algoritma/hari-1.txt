@@ -1,1 +1,10 @@
-Hari 1: Pengenalan algoritma 
+- Input data yang sudah masuk ke program 
+- Proses: langkah-langkah mengolah data 
+- Output: hasil akhir 
+- Pseudocode: 
+1. Mulai 
+2. Baca angka1 
+3. Baca angka2 
+4. Jumlah = angka1 + angka2 
+5. Tampilkan Jumlah 
+6, Selesai 
