@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aksara Kuphi - Tempat Kuliner & Ruang Temu Medan</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-cream: #F4EFEA;
+            --bg-cream-card: #EBE5DC;
+            --text-dark: #2C2B29;
+            --text-muted: #6B6862;
+            --footer-bg: #404040;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-cream);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .font-serif-custom {
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        /* Floating Nav Capsule */
+        .nav-capsule {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border-radius: 9999px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .btn-pill-outline {
+            border: 1px solid #6B6862;
+            border-radius: 9999px;
+            padding: 6px 22px;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn-pill-outline:hover {
+            background-color: var(--text-dark);
+            color: #ffffff;
+            border-color: var(--text-dark);
+        }
+
+        .nav-link {
+            position: relative;
+            cursor: pointer;
+            padding-bottom: 2px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link.active {
+            color: #111111;
+            font-weight: 600;
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #2C2B29;
+            border-radius: 2px;
+        }
+
+        .card-rounded {
+            border-radius: 36px;
+            overflow: hidden;
+        }
+
+        .custom-input {
+            background-color: transparent;
+            border: 1px solid #A39E93;
+            border-radius: 6px;
+            padding: 10px 14px;
+            width: 100%;
+            font-size: 0.85rem;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .custom-input:focus {
+            border-color: #2C2B29;
+        }
+
+        /* Multi-Page Tab View Transitions */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out forwards;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Modal Overlay for Image Uploader */
+        .uploader-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(5px);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .uploader-modal.active {
+            display: flex;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F4EFEA;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #A39E93;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-stone-300">
+
+    <!-- Header / Navbar Floating Capsular -->
+    <header class="fixed top-6 left-0 right-0 z-50 flex justify-center px-4">
+        <nav class="nav-capsule w-full max-w-5xl px-8 py-3 flex items-center justify-between">
+            <div onclick="switchTab('halaman-awal')" class="font-serif-custom text-xl font-bold tracking-wider text-stone-800 cursor-pointer select-none">
+                AKSARA KUPHI
+            </div>
+            
+            <!-- Navigation Links -->
+            <div class="hidden md:flex items-center space-x-8 text-xs font-medium tracking-widest text-stone-500 uppercase">
+                <span id="nav-halaman-awal" onclick="switchTab('halaman-awal')" class="nav-link active">HALAMAN AWAL</span>
+                <span id="nav-tentang-kami" onclick="switchTab('tentang-kami')" class="nav-link">TENTANG KAMI</span>
+                <span id="nav-reservasi-acara" onclick="switchTab('reservasi-acara')" class="nav-link">RESERVASI ACARA</span>
+                <span id="nav-kontak-lokasi" onclick="switchTab('kontak-lokasi')" class="nav-link">KONTAK & LOKASI</span>
+            </div>
+
+            <div>
+                <button onclick="switchTab('reservasi-acara')" class="btn-pill-outline font-semibold tracking-widest text-stone-800">RESERVASI</button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Container For Tab Views -->
+    <main class="flex-grow">
+
+        <!-- ==================== TAB 1: HALAMAN AWAL ==================== -->
+        <div id="tab-halaman-awal" class="tab-content active">
+            <!-- Hero Section -->
+            <section class="relative h-[85vh] min-h-[550px] flex items-end justify-center pb-20 pt-32 overflow-hidden">
+                <img id="img-hero-awal" 
+                     src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=1920&auto=format&fit=crop" 
+                     alt="Aksara Kuphi Main Entrance" 
+                     class="absolute inset-0 w-full h-full object-cover">
+                <div class="absolute inset-0 bg-black/40"></div>
+
+                <div class="relative z-10 text-center text-white px-4 max-w-4xl mx-auto">
+                    <p class="text-xs sm:text-sm font-light tracking-[0.25em] uppercase mb-2 opacity-90">
+                        MENU MELIMPAH - Makan Sepuasnya
+                    </p>
+                </div>
+            </section>
+
+            <!-- Section Fasilitas & Kegiatan -->
+            <section class="py-20 px-6 max-w-6xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16">
+                    <!-- Card 1: Fasilitas -->
+                    <div class="flex flex-col items-center text-center">
+                        <div class="card-rounded w-full h-80 sm:h-[400px] relative mb-8 shadow-md overflow-hidden bg-stone-200">
+                            <img id="img-fasilitas" 
+                                 src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=800&auto=format&fit=crop" 
+                                 alt="Fasilitas Aksara Kuphi" 
+                                 class="w-full h-full object-cover">
+                            <div class="absolute top-6 left-6 bg-black/60 backdrop-blur-md text-white p-4 rounded-2xl text-left max-w-xs">
+                                <span class="text-[10px] uppercase tracking-widest text-amber-300 font-semibold block mb-1">SEPORSI KEMENANGAN</span>
+                                <p class="text-sm font-light">Makan bareng teman</p>
+                            </div>
+                        </div>
+                        <h3 class="font-serif-custom text-3xl font-medium mb-3 text-stone-800">Fasilitas</h3>
+                        <p class="text-stone-600 text-xs sm:text-sm font-light max-w-md leading-relaxed mb-6">
+                            Selain fasilitas basic, kami juga menghadirkan ruang VIP agar para tamu dapat dengan nyaman menikmati hidangan dari seluruh nusantara sembari menikmati suasana hangat di Aksara Kuphi.
+                        </p>
+                        <button onclick="switchTab('tentang-kami')" class="btn-pill-outline text-stone-700">LIHAT LEBIH LANJUT</button>
+                    </div>
+
+                    <!-- Card 2: Kegiatan -->
+                    <div class="flex flex-col items-center text-center">
+                        <div class="card-rounded w-full h-80 sm:h-[400px] relative mb-8 shadow-md overflow-hidden bg-stone-200">
+                            <img id="img-kegiatan" 
+                                 src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=800&auto=format&fit=crop" 
+                                 alt="Kegiatan Aksara Kuphi" 
+                                 class="w-full h-full object-cover">
+                        </div>
+                        <h3 class="font-serif-custom text-3xl font-medium mb-3 text-stone-800">Kegiatan</h3>
+                        <p class="text-stone-600 text-xs sm:text-sm font-light max-w-md leading-relaxed mb-6">
+                            Aksara Kuphi juga mengadakan kegiatan Live Music, yang khusus diadakan hanya pada hari senin dan kamis agar para pengunjung Aksara Kuphi dapat menikmati suasana seperti anda konser namun dengan vibes nusantara yang sederhana bersama keluarga.
+                        </p>
+                        <button onclick="switchTab('reservasi-acara')" class="btn-pill-outline text-stone-700">LIHAT LEBIH LANJUT</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section Ulasan Tamu -->
+            <section class="relative py-28 px-6 bg-stone-900 text-white overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=1920&auto=format&fit=crop" 
+                     alt="Testimonial Overlay Background" 
+                     class="absolute inset-0 w-full h-full object-cover opacity-20 filter blur-sm">
+
+                <div class="relative z-10 max-w-4xl mx-auto text-center">
+                    <h2 class="font-serif-custom text-3xl sm:text-4xl font-normal mb-8 tracking-wide">Ulasan Tamu</h2>
+                    <blockquote class="text-xs sm:text-sm md:text-base font-light leading-relaxed tracking-wide text-stone-200 mb-6">
+                        "Saya baru saja mampir ke Aksara Kuphi dan ingin berbagi pengalaman yang cukup menyenangkan. Tempatnya berada di aksara Medan, menyediakan dua ruangan VIP yang cukup privat, satu area non-smoking ber-AC (meski terasa kurang sejuk karena pintunya selalu terbuka), serta ruang terbuka yang luas. Salah satu nilai plus yang langsung terasa adalah banyaknya colokan listrik dan Wi-Fi yang stabil, jadi saya bisa tetap produktif tanpa khawatir baterai habis. Pelayanan yang cukup bagus ramah semua pekerja nya, terutama mbak pekerja yang sangat mudah tersenyum, sopan, ramah... Intinya, dikbagusx, sering2 kasih dia bonus."
+                    </blockquote>
+                    <p class="text-xs uppercase tracking-widest text-stone-400 font-medium">
+                        — Faridah Rahmadani melalui Google Maps
+                    </p>
+                </div>
+            </section>
+        </div>
+
+        <!-- ==================== TAB 2: TENTANG KAMI ==================== -->
+        <div id="tab-tentang-kami" class="tab-content">
+            <!-- Hero Banner Tentang Kami -->
+            <section class="relative h-[70vh] min-h-[480px] flex items-center justify-center overflow-hidden">
+                <img id="img-hero-tentang" 
+                     src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=1920&auto=format&fit=crop" 
+                     alt="Aksara Kuphi Banner" 
+                     class="absolute inset-0 w-full h-full object-cover">
+                <div class="absolute inset-0 bg-black/45"></div>
+
+                <div class="relative z-10 text-center text-white px-4">
+                    <h1 class="font-serif-custom text-4xl sm:text-6xl font-normal tracking-wide">
+                        Tentang Kami
+                    </h1>
+                </div>
+            </section>
+
+            <!-- Deskripsi Filosofi -->
+            <section class="py-28 px-6 max-w-4xl mx-auto text-center">
+                <h2 class="font-serif-custom text-3xl sm:text-5xl font-medium tracking-wide mb-10 text-stone-800">
+                    Bukan Hanya Sekedar Tempat Kuliner
+                </h2>
+                <div class="text-stone-600 leading-relaxed text-sm sm:text-base font-light space-y-6">
+                    <p>
+                        Aksara Kuphi Medan adalah sebuah ruang temu budaya dan cita rasa, tempat di mana kehangatan secangkir kopi khas Nusantara berpadu harmonis dengan orisinalitas identitas lokal.
+                    </p>
+                    <p>
+                        Lahir di jantung Kota Medan, kami hadir bukan sekadar sebagai tempat menikmati kopi, melainkan sebagai wadah untuk merayakan cerita, kreativitas, dan kebersamaan.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Section Review Tamu Banner -->
+            <section class="relative py-24 px-6 bg-stone-900 text-white overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=1920&auto=format&fit=crop" 
+                     alt="Review Background" 
+                     class="absolute inset-0 w-full h-full object-cover opacity-20 filter blur-sm">
+                <div class="relative z-10 max-w-4xl mx-auto text-center">
+                    <h2 class="font-serif-custom text-3xl font-normal mb-6">Ulasan Tamu</h2>
+                    <blockquote class="text-xs sm:text-sm font-light leading-relaxed text-stone-200 mb-4">
+                        "Saya baru saja mampir ke Aksara Kuphi dan ingin berbagi pengalaman yang cukup menyenangkan. Tempatnya berada di aksara Medan, menyediakan dua ruangan VIP yang cukup privat, satu area non-smoking ber-AC serta ruang terbuka yang luas..."
+                    </blockquote>
+                    <p class="text-xs uppercase tracking-widest text-stone-400">
+                        — Faridah Rahmadani melalui Google Maps
+                    </p>
+                </div>
+            </section>
+        </div>
+
+        <!-- ==================== TAB 3: RESERVASI ACARA ==================== -->
+        <div id="tab-reservasi-acara" class="tab-content">
+            <!-- Hero Banner Kuliner Food Top View -->
+            <section class="relative h-[65vh] min-h-[450px] flex items-center justify-center overflow-hidden">
+                <img id="img-hero-reservasi" 
+                     src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1920&auto=format&fit=crop" 
+                     alt="Food & Coffee Top View" 
+                     class="absolute inset-0 w-full h-full object-cover">
+                <div class="absolute inset-0 bg-black/40"></div>
+
+                <div class="relative z-10 text-center text-white px-4">
+                    <h1 class="font-serif-custom text-4xl sm:text-6xl font-normal tracking-wide">
+                        Reservasi Acara
+                    </h1>
+                </div>
+            </section>
+
+            <!-- Content Area: Event & Proposal Form -->
+            <section class="py-20 px-6 max-w-5xl mx-auto">
+                <div class="text-center mb-16">
+                    <h2 class="font-serif-custom text-3xl sm:text-4xl font-normal text-stone-800 max-w-3xl mx-auto leading-snug">
+                        Selenggarakan acara atau kegiatan bersama kami di Aksara Kuphi
+                    </h2>
+                </div>
+
+                <!-- Event Details Split -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-20">
+                    <div class="card-rounded h-80 sm:h-[400px] shadow-md bg-stone-200">
+                        <img id="img-acara" 
+                             src="https://images.unsplash.com/photo-1517502884422-41eaead166d4?q=80&w=1000&auto=format&fit=crop" 
+                             alt="Ruang VIP Acara Aksara Kuphi" 
+                             class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <span class="text-[11px] uppercase tracking-widest text-stone-500 font-semibold block mb-2">ACARA DAN PERTEMUAN</span>
+                        <h3 class="font-serif-custom text-3xl font-normal mb-5 text-stone-800 leading-tight">
+                            Rencanakan acara atau kegiatan Anda bersama kami di Aksara Kuphi
+                        </h3>
+                        <p class="text-stone-600 text-xs sm:text-sm leading-relaxed font-light mb-8">
+                            Dilengkapi dengan area ber-AC, karaoke dan pilihan paket dapat disesuaikan dengan kebutuhan menjadikan Aksara Kuphi sebagai tempat yang tepat bagi Anda untuk mengadakan kegiatan mulai dari rapat, acara ulang tahun hingga pernikahan.
+                        </p>
+                        <a href="#form-proposal" class="btn-pill-outline inline-block">PELAJARI LEBIH</a>
+                    </div>
+                </div>
+
+                <!-- RFP Form -->
+                <div id="form-proposal" class="max-w-2xl mx-auto pt-8 border-t border-stone-300">
+                    <h3 class="font-serif-custom text-3xl text-center font-normal mb-10 text-stone-800">
+                        Request for Proposal
+                    </h3>
+
+                    <form onsubmit="handleFormSubmit(event)" class="space-y-6 text-xs text-stone-700">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block mb-2 font-medium">Name*</label>
+                                <input type="text" placeholder="First" required class="custom-input">
+                            </div>
+                            <div>
+                                <label class="block mb-2 font-medium">Last*</label>
+                                <input type="text" placeholder="Last" required class="custom-input">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block mb-2 font-medium">Email*</label>
+                                <input type="email" placeholder="your@email.com" required class="custom-input">
+                            </div>
+                            <div>
+                                <label class="block mb-2 font-medium">Phone*</label>
+                                <input type="tel" placeholder="(area code) Phone" required class="custom-input">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block mb-2 font-medium">Event Starts</label>
+                                <input type="date" value="2026-10-08" class="custom-input">
+                            </div>
+                            <div>
+                                <label class="block mb-2 font-medium">Event Ends</label>
+                                <input type="date" value="2026-10-09" class="custom-input">
+                            </div>
+                        </div>
+
+                        <div class="flex items-center space-x-3 pt-2">
+                            <input type="checkbox" id="privacy" required class="rounded border-stone-400 text-stone-800 focus:ring-stone-500">
+                            <label for="privacy" class="text-stone-600 font-light">
+                                By checking this box, you have read and agreed to our Privacy Policy
+                            </label>
+                        </div>
+
+                        <div class="pt-4">
+                            <button type="submit" class="btn-pill-outline px-8 py-3 text-xs tracking-widest font-semibold uppercase">
+                                SUBMIT
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </div>
+
+        <!-- ==================== TAB 4: KONTAK & LOKASI ==================== -->
+        <div id="tab-kontak-lokasi" class="tab-content">
+            <!-- Hero Banner Top View Food -->
+            <section class="relative h-[65vh] min-h-[450px] flex items-center justify-center overflow-hidden">
+                <img id="img-hero-kontak" 
+                     src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1920&auto=format&fit=crop" 
+                     alt="Food Banner Aksara Kuphi" 
+                     class="absolute inset-0 w-full h-full object-cover">
+                <div class="absolute inset-0 bg-black/40"></div>
+
+                <div class="relative z-10 text-center text-white px-4">
+                    <h1 class="font-serif-custom text-4xl sm:text-6xl font-normal tracking-wide">
+                        Kontak & Lokasi
+                    </h1>
+                </div>
+            </section>
+
+            <!-- Deskripsi Temukan Kami -->
+            <section class="py-20 px-6 max-w-4xl mx-auto text-center">
+                <h2 class="font-serif-custom text-3xl sm:text-5xl font-normal mb-8 text-stone-800">
+                    Temukan Kami
+                </h2>
+                <p class="text-stone-600 text-xs sm:text-sm font-light leading-relaxed max-w-3xl mx-auto">
+                    Kami mengundang Anda untuk merasakan langsung kehangatan Aksara Kuphi yang terletak strategis di Jalan Aksara, Simpang H.M. Yamin, Kelurahan Bantan, Kecamatan Medan Tembung. Berada di salah satu pusat aktivitas Kota Medan, ruang kuliner kami dirancang dengan akses yang mudah serta dilengkapi dengan fasilitas parkir yang sangat luas dan aman untuk kenyamanan kunjungan Anda bersama teman, komunitas, maupun keluarga.
+                </p>
+            </section>
+
+            <!-- Informasi Detail & Map Grid -->
+            <section class="pb-24 px-6 max-w-5xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
+                    <!-- Left: Text Details -->
+                    <div class="space-y-8">
+                        <div>
+                            <h3 class="font-serif-custom text-2xl font-semibold mb-2 text-stone-800">Location</h3>
+                            <p class="text-stone-600 text-xs sm:text-sm font-light leading-relaxed">
+                                HPX4+4CC, Pahlawan,<br>
+                                Kec. Medan Perjuangan,<br>
+                                Kota Medan, Sumatera Utara 20222
+                            </p>
+                            <a href="https://maps.google.com/?q=Aksara+Kuphi+Medan" target="_blank" class="btn-pill-outline inline-block mt-4 text-[11px]">
+                                GET DIRECTIONS
+                            </a>
+                        </div>
+
+                        <div>
+                            <h3 class="font-serif-custom text-2xl font-semibold mb-2 text-stone-800">Contact</h3>
+                            <p class="text-stone-600 text-xs sm:text-sm font-light leading-relaxed">
+                                <span class="font-normal">INQUIRIES</span> +62813-3367-9988<br>
+                                <span class="font-normal">EMAIL:</span> aksara.kuphi@gmail.com
+                            </p>
+                        </div>
+
+                        <div>
+                            <h3 class="font-serif-custom text-2xl font-semibold mb-2 text-stone-800">Hours</h3>
+                            <p class="text-stone-600 text-xs sm:text-sm font-light leading-relaxed">
+                                Setiap Hari | 07.00 - 03.00 WIB
+                            </p>
+                        </div>
+
+                        <div class="pt-2">
+                            <button onclick="switchTab('reservasi-acara')" class="font-serif-custom text-2xl font-medium text-stone-800 hover:underline">
+                                Reservasi Sekarang
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Right: Google Maps Embed -->
+                    <div class="w-full h-80 sm:h-[380px] card-rounded overflow-hidden shadow-md border border-stone-300">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3981.98688463879!2d98.7051!3d3.5901!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zM8KwMzUnMjQuNCJOIDk4wrA0MicxOC40IkU!5e0!3m2!1sid!2sid!4v1650000000000!5m2!1sid!2sid" 
+                            width="100%" 
+                            height="100%" 
+                            style="border:0;" 
+                            allowfullscreen="" 
+                            loading="lazy">
+                        </iframe>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+    </main>
+
+    <!-- Footer Section (Ditampilkan di semua tab) -->
+    <footer class="bg-[#404040] text-stone-300 py-16 px-6 border-t border-stone-600">
+        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 text-center text-xs tracking-wider">
+            <!-- Kolom 1: Lokasi Kami -->
+            <div>
+                <h4 class="font-semibold uppercase tracking-widest text-stone-100 mb-4">LOKASI KAMI</h4>
+                <p class="font-light leading-relaxed max-w-xs mx-auto text-stone-300">
+                    HPX4+4CC, Pahlawan,<br>
+                    Kec. Medan Perjuangan,<br>
+                    Kota Medan, Sumatera Utara 20222
+                </p>
+            </div>
+
+            <!-- Kolom 2: Hubungi Kami -->
+            <div>
+                <h4 class="font-semibold uppercase tracking-widest text-stone-100 mb-4">HUBUNGI KAMI</h4>
+                <p class="font-light leading-relaxed mb-4 text-stone-300">
+                    +62813-3367-9988<br>
+                    @aksarakuphi.mdn
+                </p>
+                <a href="https://instagram.com" target="_blank" class="inline-block text-xl hover:text-white transition">
+                    <i class="fa-brands fa-instagram"></i>
+                </a>
+            </div>
+
+            <!-- Kolom 3: Hours -->
+            <div>
+                <h4 class="font-semibold uppercase tracking-widest text-stone-100 mb-4">HOURS</h4>
+                <p class="font-light leading-relaxed text-stone-300">
+                    Setiap Hari | 07.00 - 03.00 WIB
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Image Uploader Trigger Button -->
+    <button onclick="toggleUploaderModal()" class="fixed bottom-6 right-6 z-40 bg-stone-800 text-white p-4 rounded-full shadow-2xl hover:bg-stone-900 transition flex items-center space-x-2 text-xs uppercase tracking-widest">
+        <i class="fa-solid fa-camera text-base"></i>
+        <span class="hidden sm:inline">Ganti Gambar</span>
+    </button>
+
+    <!-- Uploader Modal -->
+    <div id="uploader-modal" class="uploader-modal">
+        <div class="bg-white rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl relative text-stone-800">
+            <button onclick="toggleUploaderModal()" class="absolute top-4 right-4 text-stone-400 hover:text-stone-700">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+
+            <h3 class="font-serif-custom text-2xl font-semibold mb-2">Upload Gambar Sendiri</h3>
+            <p class="text-xs text-stone-500 mb-6">Pilih berkas dari PC untuk memperbarui gambar di website secara live.</p>
+
+            <div class="space-y-4 text-xs">
+                <div class="p-3 bg-stone-50 rounded-lg border border-stone-200">
+                    <label class="block font-medium mb-1">1. Hero Halaman Awal</label>
+                    <input type="file" accept="image/*" onchange="uploadImage(event, 'img-hero-awal')" class="w-full text-xs text-stone-500 file:mr-3 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:bg-stone-800 file:text-white hover:file:bg-stone-700 cursor-pointer">
+                </div>
+
+                <div class="p-3 bg-stone-50 rounded-lg border border-stone-200">
+                    <label class="block font-medium mb-1">2. Gambar Fasilitas</label>
+                    <input type="file" accept="image/*" onchange="uploadImage(event, 'img-fasilitas')" class="w-full text-xs text-stone-500 file:mr-3 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:bg-stone-800 file:text-white hover:file:bg-stone-700 cursor-pointer">
+                </div>
+
+                <div class="p-3 bg-stone-50 rounded-lg border border-stone-200">
+                    <label class="block font-medium mb-1">3. Gambar Kegiatan</label>
+                    <input type="file" accept="image/*" onchange="uploadImage(event, 'img-kegiatan')" class="w-full text-xs text-stone-500 file:mr-3 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:bg-stone-800 file:text-white hover:file:bg-stone-700 cursor-pointer">
+                </div>
+
+                <div class="p-3 bg-stone-50 rounded-lg border border-stone-200">
+                    <label class="block font-medium mb-1">4. Banner Kontak & Reservasi</label>
+                    <input type="file" accept="image/*" onchange="uploadMultipleImages(event, ['img-hero-reservasi', 'img-hero-kontak'])" class="w-full text-xs text-stone-500 file:mr-3 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:bg-stone-800 file:text-white hover:file:bg-stone-700 cursor-pointer">
+                </div>
+            </div>
+
+            <div class="mt-6 text-right">
+                <button onclick="toggleUploaderModal()" class="btn-pill-outline bg-stone-800 text-white hover:bg-stone-900 border-none px-6">
+                    Selesai
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Multi-Page Tab Switcher Logic
+        function switchTab(tabId) {
+            // Hide all tab contents
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Remove active class from all nav links
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => link.classList.remove('active'));
+
+            // Show selected tab content
+            const selectedTab = document.getElementById('tab-' + tabId);
+            if (selectedTab) {
+                selectedTab.classList.add('active');
+            }
+
+            // Set active class on active nav link
+            const selectedNavLink = document.getElementById('nav-' + tabId);
+            if (selectedNavLink) {
+                selectedNavLink.classList.add('active');
+            }
+
+            // Scroll to top of page smoothly on tab switch
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Toggle Modal Uploader
+        function toggleUploaderModal() {
+            const modal = document.getElementById('uploader-modal');
+            modal.classList.toggle('active');
+        }
+
+        // Live Upload Single Image
+        function uploadImage(event, targetImgId) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const targetImage = document.getElementById(targetImgId);
+                    if (targetImage) {
+                        targetImage.src = e.target.result;
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Live Upload Multiple Image Elements
+        function uploadMultipleImages(event, targetImgIds) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    targetImgIds.forEach(id => {
+                        const targetImage = document.getElementById(id);
+                        if (targetImage) {
+                            targetImage.src = e.target.result;
+                        }
+                    });
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Handle RFP Form Submission
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            alert('Terima kasih! Permintaan proposal Anda telah kami terima. Tim Aksara Kuphi akan segera menghubungi Anda.');
+            e.target.reset();
+        }
+    </script>
+</body>
+</html>
